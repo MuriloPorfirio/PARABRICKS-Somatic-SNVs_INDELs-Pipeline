@@ -28,6 +28,9 @@ nvcr.io/nvidia/clara/clara-parabricks:4.5.1-1 \
 pbrun mutectcaller \
 # Launch the MutectCaller tool.
 
+--num-htvc-threads 10 \
+#Specify the number of threads after this option. If not set, the process will run with the default of 5 threads.
+
 --ref /reference/blablabla.fa \
 # Path to the genome reference FASTA file inside the container.
 
