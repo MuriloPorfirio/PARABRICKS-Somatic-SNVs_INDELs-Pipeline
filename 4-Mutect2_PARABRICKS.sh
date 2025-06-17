@@ -54,7 +54,7 @@ pbrun mutectcaller \
 --tumor-name sm_SRR7890824 \
 # Tumor sample name for the VCF header.
 # Must match exactly the SM tag found in the tumor BAM's Read Group.
-# Use: samtools view -H YOUR_TUMOR.bam | grep '^@RG'
+# Use: docker run --rm -v $(pwd):/data staphb/samtools samtools view -H /data/IDUDI0031_aligned.bam | grep '^@RG'
 
 --normal-name sm_SRR7890827
 # Normal sample name for the VCF header.
