@@ -1,4 +1,4 @@
-docker run \
+time docker run \
 
 --gpus '"device=7"' \
 # Allow the container to access only GPU 7 on the host.
@@ -60,6 +60,13 @@ pbrun mutectcaller \
 # Normal sample name for the VCF header.
 # Must match the SM tag in the normal BAM file.
 # If you don't have a normal sample, omit this line.
+
+2>&1 | tee /caminho/para/salvar/output/mutectcaller_run.log
+# Generates a log with detailed processing information.
+# Specify both the log file name and its output location
+# (it’s recommended to use the same directory as the output files to avoid errors).
+
+
 
 
 
