@@ -13,6 +13,9 @@ nvcr.io/nvidia/clara/clara-parabricks:4.5.1-1 \
 pbrun mutectcaller \
 # Launch the MutectCaller tool.
 
+--user 1006:1006
+#User ID / Group ID
+
 --ref /reference/blablabla.fa \
 # Path to the genome reference FASTA file inside the container.
 
