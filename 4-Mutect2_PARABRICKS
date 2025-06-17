@@ -1,1 +1,67 @@
+docker run \
 
+  --gpus all \
+  # Allow the container to access all available GPUs on the host.
+  # To use only GPU 0, for example, replace with: --gpus '"device=0"'
+  # The details regarding this specific configuration are outlined in
+    the "Getting Started with NVIDIA Parabricks" catalog, in a section beginning with "Some useful Docker options to consider:".
+
+   --workdir /workdir \
+  # There’s no need to change anything here, as this keeps /workdir as the default working directory inside the container.
+
+  --rm \
+  # Automatically remove the container after execution finishes.
+
+   --volume $(pwd):/workdir \
+
+  # You should replace $(pwd) with the path to the directory where your BAM files are stored.
+    For example, if your files are located at /home/yourname/dados_bam,
+    the command should be updated to: --volume /home/yourname/dados_bam:/workdir \.
+    Further details about this parameter can be found in the "Getting the Software - NVIDIA Docs" section.
+
+  --volume $(pwd):/outputdir \
+  # This parameter defines the destination directory for the output files.
+    As in the previous example, you should replace $(pwd) with the appropriate path.
+
+  nvcr.io/nvidia/clara/clara-parabricks:4.5.1-1 \
+  # Specify the Docker image containing Parabricks tools.
+  # This example uses version 4.5.1-1. Update the tag if you want a different version.
+
+  pbrun mutectcaller \
+  # Launch the MutectCaller, which is the GPU-accelerated version of GATK Mutect2.
+
+  --ref /workdir/GRCh38.d1.vd1.fa \
+  # Parabricks: Path to the genome reference FASTA file, with all necessary index files.
+  # This file must exist inside /workdir (i.e., your current host directory).
+
+
+
+
+
+  # Parabricks: Path to the tumor sample BAM file.
+  # The BAM must be pre-processed (aligned, with correct Read Group and sample name in SM tag).
+  --in-tumor-bam /workdir/SRR7890824-WGS_FD_T.bam \
+
+  # Parabricks: Path to the normal (control) sample BAM file.
+  # Also needs proper Read Group with SM tag.
+  --in-normal-bam /workdir/SRR7890827-WGS_FD_N.bam \
+
+  # Parabricks: Path to the tumor Base Quality Score Recalibration (BQSR) report.
+  # This is usually generated during pre-processing with tools like GATK BQSR or Parabricks fq2bam.
+  --in-tumor-recal-file /workdir/RR7890824-WGS_FD_T_BQSR_REPORT.txt \
+
+  # Parabricks: Path to the normal BQSR report.
+  # Same concept as the tumor report but for the normal sample.
+  --in-normal-recal-file /workdir/SRR7890827-WGS_FD_N_BQSR_REPORT.txt \
+
+  # Parabricks: Full path and name for the output VCF file.
+  # This file will contain the somatic variants (SNVs and indels) and will appear in your local directory.
+  --out-vcf /outputdir/SRR7890824-SRR7890827-WGS_FD.vcf \
+
+  # Parabricks: Tumor sample name to appear in the VCF header.
+  # Must exactly match the SM tag in the tumor BAM file.
+  --tumor-name sm_SRR7890824 \
+
+  # Parabricks: Normal sample name for the VCF header.
+  # Must exactly match the SM tag in the normal BAM file.
+  --normal-name sm_SRR7890827
