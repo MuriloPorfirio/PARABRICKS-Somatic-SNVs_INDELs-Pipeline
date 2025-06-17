@@ -1,3 +1,18 @@
+docker run \
+
+--gpus '"device=7"' \
+# Allow the container to access only GPU 7 on the host.
+# Alternatively, use --gpus all to allow all GPUs.
+
+--user 1006:1006 \
+#User ID / Group ID
+
+--workdir /workdir \
+# Set the default working directory inside the container, DO NOT CHANGE.
+
+--rm \
+# Automatically remove the container after execution finishes.
+
 --volume /caminho/para/seus/bams:/workdir \
 # Bind-mount the host directory containing your BAM input files into /workdir inside the container.
 
@@ -12,9 +27,6 @@ nvcr.io/nvidia/clara/clara-parabricks:4.5.1-1 \
 
 pbrun mutectcaller \
 # Launch the MutectCaller tool.
-
---user 1006:1006
-#User ID / Group ID
 
 --ref /reference/blablabla.fa \
 # Path to the genome reference FASTA file inside the container.
@@ -48,6 +60,7 @@ pbrun mutectcaller \
 # Normal sample name for the VCF header.
 # Must match the SM tag in the normal BAM file.
 # If you don't have a normal sample, omit this line.
+
 
 
 
