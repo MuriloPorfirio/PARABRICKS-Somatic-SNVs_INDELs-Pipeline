@@ -1,0 +1,38 @@
+# !/bin/bash
+#Adaptado da autora Saloe Domingues Bispo Poubel
+
+# Caminho para o VCF de entrada
+VCF="/raid/biomafia/murilo.aguiar/processos/1-PARABRICKS_trimmed_files_13-06-2025_17h45m/1-concatenated_fastq_16-06-2025_10h41m/4-parabricks_output_16-06-2025_15h26m/output_mutectparabricks/IDUDI0031.vcf"
+
+# Caminho para o diretório de saída
+OUT_DIR="/raid/biomafia/murilo.aguiar/processos/1-PARABRICKS_trimmed_files_13-06-2025_17h45m/1-concatenated_fastq_16-06-2025_10h41m/4-parabricks_output_16-06-2025_15h26m/output_mutectparabricks/vep_output"
+
+# Prefixo para os arquivos de saída
+OUT_PREFIX="${OUT_DIR}/IDUDI0031"
+
+# Caminho para ANNOVAR e banco de dados
+ANNOVAR_DIR="/raid/biomafia/saloe.bispo/annovar"
+HUMANDB="${ANNOVAR_DIR}/humandb"
+
+# Garante que a pasta de saída exista
+mkdir -p ${OUT_DIR}
+
+# Medir o tempo total de execução
+time {
+
+    # Converte VCF para AVINPUT
+    ${ANNOVAR_DIR}/convert2annovar.pl -format vcf4 ${VCF} -outfile ${OUT_PREFIX}.avinput -withzyg -includeinfo
+
+    # Roda o Annovar
+    ${ANNOVAR_DIR}/table_annovar.pl ${OUT_PREFIX}.avinput ${HUMANDB} \
+    -buildver hg38 \
+    -out ${OUT_PREFIX} \
+    -remove \
+    -protocol refGene,clinvar_20220320,gnomad211_exome \
+    -operation g,f,f \
+    -nastring . \
+    -otherinfo
+
+}
+
+echo "Anotação finalizada para IDUDI0031"
