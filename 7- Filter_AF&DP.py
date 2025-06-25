@@ -11,7 +11,7 @@ df["AF"] = pd.to_numeric(df["AF"], errors="coerce")
 df["DP"] = pd.to_numeric(df["DP"], errors="coerce")
 
 # Filter: keep only variants with allele frequency >= 5% and depth >= 10
-df_filtered = df[(df["AF"] >= 0.05) & (df["DP"] >= 10)]
+df_filtered = df[(df["AF"] >= 0.02) & (df["DP"] >= 30)]
 
 # Save the filtered data to a new .tsv file
 df_filtered.to_csv("vcf_info_filtered.tsv", sep="\t", index=False)
