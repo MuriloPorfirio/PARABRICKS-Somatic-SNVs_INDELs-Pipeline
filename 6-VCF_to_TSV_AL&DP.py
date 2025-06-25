@@ -1,37 +1,41 @@
-# Processe no mesmo diretório do input.
+# Esse script deve ser executado no mesmo diretório onde está o VCF de entrada.
+# Ele extrai os campos AF (frequência alélica) e DP (profundidade) da COLUNA FORMAT do VCF
+# e salva as informações em um arquivo .tsv para filtragem posterior.
 
-from cyvcf2 import VCF  # biblioteca moderna pra ler VCFs
-import csv  # pra salvar em .tsv
+from cyvcf2 import VCF
+import csv
 
-# Caminho do VCF (ajuste se estiver em outro lugar)
+# Nome do arquivo de entrada VCF
 vcf_path = "IDUDI0031.vcf"
 
 # Nome do arquivo de saída
 saida_tsv = "vcf_info_af_dp.tsv"
 
-# Abre o VCF com cyvcf2
+# Abre o VCF
 vcf = VCF(vcf_path)
 
-# Lista pra guardar os dados
-linhas = [["Chr", "Pos", "Ref", "Alt", "DP", "AF"]]  # cabeçalho
+# Lista com cabeçalho
+linhas = [["Chr", "Pos", "Ref", "Alt", "DP", "AF"]]
 
-# Vai linha por linha no VCF
+# Itera sobre cada variante
 for variante in vcf:
     chr = variante.CHROM
     pos = variante.POS
     ref = variante.REF
     alt = variante.ALT[0] if variante.ALT else "."
 
-    # pega DP (profundidade) e AF (frequência alélica)
-    dp = variante.INFO.get("DP", "NA")
-    af = variante.INFO.get("AF", "NA")
-    if isinstance(af, list):
-        af = af[0]  # se vier em lista, pega só o primeiro valor
+    # Pega os dados da amostra (primeira amostra do VCF)
+    amostra = variante.format("AF")  # retorna uma matriz numpy
+    dp_amostra = variante.format("DP")
 
-    # adiciona a linha
+    # Converte para string simples
+    af = amostra[0][0] if amostra is not None else "NA"
+    dp = dp_amostra[0][0] if dp_amostra is not None else "NA"
+
+    # Adiciona à tabela
     linhas.append([chr, pos, ref, str(alt), dp, af])
 
-# Salva em .tsv (tab separado)
+# Salva o resultado
 with open(saida_tsv, "w", newline="") as f:
     writer = csv.writer(f, delimiter="\t")
     writer.writerows(linhas)
