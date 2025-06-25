@@ -1,19 +1,20 @@
-#Este script deve ser executado na mesma pasta onde está o input.
+# This script should be run in the same folder as the "vcf_info_af_dp.tsv" file.
+# It filters variants with AF >= 0.05 and DP >= 10, and saves the result in a new .tsv file.
 
 import pandas as pd
 
-# Lê o .tsv que foi gerado com as informações extraídas do VCF
+# Read the .tsv file generated from the VCF
 df = pd.read_csv("vcf_info_af_dp.tsv", sep="\t")
 
-# Converte as colunas AF e DP para numérico (caso estejam como string)
+# Convert AF and DP to numeric values (in case they’re stored as strings)
 df["AF"] = pd.to_numeric(df["AF"], errors="coerce")
 df["DP"] = pd.to_numeric(df["DP"], errors="coerce")
 
-# Aplica o filtro: apenas variantes com AF >= 0.05 e DP >= 10
-df_filtrado = df[(df["AF"] >= 0.05) & (df["DP"] >= 10)]
+# Filter: keep only variants with allele frequency >= 5% and depth >= 10
+df_filtered = df[(df["AF"] >= 0.05) & (df["DP"] >= 10)]
 
-# Salva o resultado filtrado
-df_filtrado.to_csv("vcf_info_filtrado.tsv", sep="\t", index=False)
+# Save the filtered data to a new .tsv file
+df_filtered.to_csv("vcf_info_filtered.tsv", sep="\t", index=False)
 
-print(f"Total de variantes após o filtro: {len(df_filtrado)}")
-print("Arquivo salvo como vcf_info_filtrado.tsv")
+print(f"Total variants after filtering: {len(df_filtered)}")
+print("File saved as vcf_info_filtered.tsv")
