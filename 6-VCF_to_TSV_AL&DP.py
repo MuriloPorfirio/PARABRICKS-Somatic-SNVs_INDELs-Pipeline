@@ -1,6 +1,7 @@
 # This script should be run in the same directory as the input VCF file.
 # It extracts the AF (allele frequency) and DP (depth) fields from the FORMAT column of the VCF
 # and saves this information into a .tsv file for later filtering.
+# conda activate vcf_env
 
 from cyvcf2 import VCF
 import csv
