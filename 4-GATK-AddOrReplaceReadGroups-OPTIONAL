@@ -1,0 +1,14 @@
+# === JUST IN CASE YOU REACH THIS STEP WITH BAM FILES MISSING OR HAVING INCORRECT READ GROUP HEADERS ===
+
+docker run --rm \
+  -v /home/murilo.aguiar/raid-murilo/Processos/1-Alinhamento-ExomaCompleto-LeticiaFerro-Parabricks_06-08-2025/2-BAMsConcatenados-ExomaCompleto-LeticiaFerro-Parabricks_07-08-2025:/input \
+  -v /home/murilo.aguiar/raid-murilo/Processos/1-Alinhamento-ExomaCompleto-LeticiaFerro-Parabricks_06-08-2025/2-BAMs-Com-Cabecalho-Corrigido_AddOrReplaceReadGroups_08-08-2025:/output \
+  broadinstitute/gatk:latest \
+  gatk AddOrReplaceReadGroups \
+  -I /input/KOO311-T_S15_L001.bam \ #<<< BAM de entrada
+  -O /output/KOO311-T_S15_L001_fixed.bam \ #<<< BAM corrigido de saída
+  -RGID T_L001 \ #<<< ID único do grupo (pode ser simplificado com nome do arquivo)
+  -RGLB lib1 \ #<<< Biblioteca (use "lib1" se não tiver info real)
+  -RGPL ILLUMINA \ #<<< Plataforma (use "ILLUMINA")
+  -RGPU L001 \ #<<< Unidade de plataforma (pode usar nome da lane)
+  -RGSM KOO311_TUMOR #<<< Nome real da amostra (essencial!)
