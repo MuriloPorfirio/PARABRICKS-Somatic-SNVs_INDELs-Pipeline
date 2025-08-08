@@ -1,5 +1,6 @@
 #!/bin/bash
 # === MERGE por amostra com Read Groups corrigidos ===
+#IN CASE U DIDNT MERGED YET
 
 docker run --rm \
   -v /home/murilo.aguiar/raid-murilo/Processos/1-Alinhamento-ExomaCompleto-LeticiaFerro-Parabricks_06-08-2025/2-BAMs-Com-Cabecalho-Corrigido_AddOrReplaceReadGroups_08-08-2025:/input \
