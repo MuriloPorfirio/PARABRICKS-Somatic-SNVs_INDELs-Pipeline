@@ -15,4 +15,6 @@ time docker run --rm --gpus device=7 \
   --knownSites /workdir/Genomas_de_referencia/humano/variantes_conhecidas_para_BaseRecalibrator-ApplyBQSR/Homo_sapiens_assembly38.known_indels.vcf.gz \
   --knownSites /workdir/Genomas_de_referencia/humano/variantes_conhecidas_para_BaseRecalibrator-ApplyBQSR/1000G_phase1.snps.high_confidence.hg38.vcf.gz \
   --out-bam /outputdir/HJVHNDSX7-1-IDUDI0031.bam \
-  --out-recal-file /outputdir/HJVHNDSX7-1-IDUDI0031.recal.table
+  --out-recal-file /outputdir/HJVHNDSX7-1-IDUDI0031.recal.table \
+  --out-duplicate-metrics /outputdir/HJVHNDSX7-1-IDUDI0031.dup_metrics.txt \
+  --gpusort --gpuwrite
