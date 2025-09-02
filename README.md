@@ -1,4 +1,4 @@
-# Parabricks GPU Pipeline (Docker, Linux server)
+# Parabricks SNVs & INDELs GPU Pipeline (Docker, Linux server)
 
 **GPU‑accelerated** pipeline for NGS processing using **NVIDIA Parabricks**. Runs on a **Linux server** with **Docker** and **NVIDIA GPUs**. The focus is performance (GPU) and reproducibility (pinned Docker images).
 
