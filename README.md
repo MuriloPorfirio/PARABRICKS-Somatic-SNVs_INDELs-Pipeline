@@ -2,8 +2,6 @@
 
 **GPU‑accelerated** pipeline for NGS processing using **NVIDIA Parabricks**. Runs on a **Linux server** with **Docker** and **NVIDIA GPUs**. The focus is performance (GPU) and reproducibility (pinned Docker images).
 
-> **Heads‑up**: the correct acronym is **BQSR** (Base Quality Score Recalibration), not “BQRS”.
-
 ---
 
 ## What this pipeline does
