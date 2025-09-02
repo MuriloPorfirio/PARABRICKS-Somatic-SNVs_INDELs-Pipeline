@@ -64,7 +64,7 @@ flowchart LR
     B --> C["3. Indexing-n-ReadGroupsChecking.sh (check @RG / SM / ID / PU; index if missing)"]
     C -->|RG OK| E["4. ApplyBQSR_PARABRICKS.sh (apply BQSR on GPU)"]
     C -->|RG wrong| D["3.1 Indexing-n-AddOrReplaceReadGroups_GATK.sh (fix RG with GATK)"]
-    D --> F["3.3 BaseRecalibrator_GATK.sh (recreate BQSR table)"]
+    D --> F["3.2 BaseRecalibrator_GATK.sh (recreate BQSR table)"]
     F --> E
     E --> G["4.1 indexing (index recalibrated BAM)"]
     G --> H["5. Mutect2_PARABRICKS.sh (somatic SNVs/indels)"]
@@ -113,9 +113,9 @@ Edit paths/variables **inside each script** before running (mounts, reference, k
 * Adds or replaces RG fields (`RGID`, `RGLB`, `RGPL`, `RGPU`, `RGSM`)
 * Writes `*_fixed.bam` and creates `.bai`
 
-### 3.3) Recreate BQSR table (if RG was fixed)
+### 3.2) Recreate BQSR table (if RG was fixed)
 
-**Script:** `3.3-BaseRecalibrator_GATK.sh`
+**Script:** `3.2-BaseRecalibrator_GATK.sh`
 **Image:** `broadinstitute/gatk:latest`
 
 * Runs **GATK BaseRecalibrator**
