@@ -60,16 +60,16 @@ docker --version      # Docker installed?
 
 ```mermaid
 flowchart LR
-A[1. Trimming_w_fastqc.sh\n(Trim Galore + optional FastQC)] --> B[2. fq2bam_PARABRICKS_n_BQRS-table-creation.sh\n(fq2bam + dup-mark + BQSR table)]
-B --> C[3. Indexing-n-ReadGroupsChecking.sh\n(check @RG / SM / ID / PU; index if missing)]
-C -->|RG OK| E[4. ApplyBQSR_PARABRICKS.sh\n(apply BQSR on GPU)]
-C -->|RG wrong| D[3.1 Indexing-n-AddOrReplaceReadGroups_GATK.sh\n(fix RG with GATK)]
-D --> F[3.3 BaseRecalibrator_GATK.sh\n(recreate BQSR table)]
-F --> E
-E --> G[4.1 indexing\n(index recalibrated BAM)]
-G --> H[5. Mutect2_PARABRICKS.sh\n(somatic SNVs/indels)]
-H --> I[6. Variants-Annotations-VEPensembl.sh\n(VEP functional annotation)]
-H --> J[7. Variant_Annotation-dbSNP_PARABRICKS.sh\n(add rsIDs with dbSNP on GPU)]
+    A["1. Trimming_w_fastqc.sh (Trim Galore + optional FastQC)"] --> B["2. fq2bam_PARABRICKS_n_BQRS-table-creation.sh (fq2bam + dup-mark + BQSR table)"]
+    B --> C["3. Indexing-n-ReadGroupsChecking.sh (check @RG / SM / ID / PU; index if missing)"]
+    C -->|RG OK| E["4. ApplyBQSR_PARABRICKS.sh (apply BQSR on GPU)"]
+    C -->|RG wrong| D["3.1 Indexing-n-AddOrReplaceReadGroups_GATK.sh (fix RG with GATK)"]
+    D --> F["3.3 BaseRecalibrator_GATK.sh (recreate BQSR table)"]
+    F --> E
+    E --> G["4.1 indexing (index recalibrated BAM)"]
+    G --> H["5. Mutect2_PARABRICKS.sh (somatic SNVs/indels)"]
+    H --> I["6. Variants-Annotations-VEPensembl.sh (VEP functional annotation)"]
+    H --> J["7. Variant_Annotation-dbSNP_PARABRICKS.sh (add rsIDs with dbSNP on GPU)"]
 ```
 
 ---
@@ -150,4 +150,60 @@ Edit paths/variables **inside each script** before running (mounts, reference, k
 **Script:** `6-Variants-Annotations-VEPensembl.sh`
 **Image:** `ensemblorg/ensembl-vep:latest`
 
-* Adds gene/transcript consequences
+* Adds gene/transcript consequences (missense, stop‑gain, etc.)
+* Output: `*.vep.txt` (can also output VCF if configured)
+
+### 7) Add rsIDs with dbSNP (GPU)
+
+**Script:** `7-Variant_Annotation-dbSNP_PARABRICKS.sh`
+**Image:** `nvcr.io/nvidia/clara/clara-parabricks:4.5.1-1`
+
+* Annotates VCF with **dbSNP** identifiers (`rsID`)
+* Output: `*_annotado_dbsnp.vcf.gz`
+
+---
+
+## Notes & tips
+
+* **GPU selection**: you can target a specific GPU, e.g. `--gpus device=7`, or use all with `--gpus all`.
+* **Threads/Memory**: tune thread counts and RAM according to your server. Parabricks tools expose knobs like `--num-htvc-threads`.
+* **Known sites**: make sure VCFs are indexed (`.tbi`) and match your reference build (e.g., GRCh38).
+* **Reproducibility**: keep image versions pinned; record exact references/VCFs used in each run.
+
+---
+
+## Troubleshooting (quick)
+
+* **RG mismatch**: If `SM` in BAM header does not match names passed to Mutect2, fix RGs (step **3.1**), then **recreate BQSR** (step **3.3**) and **re‑apply** (step **4**).
+* **Missing indexes**: If BAM or VCF lacks index, create with samtools (`samtools index file.bam`) or `tabix` for bgzipped VCFs.
+* **GPU not visible in container**: check NVIDIA Container Toolkit install; try `docker run --rm --gpus all nvidia/cuda:12.3.2-base nvidia-smi`.
+
+---
+
+## License (Non‑Commercial)
+
+This project is released for **personal, educational, or research use only**. **Commercial use is not allowed** without explicit permission from the author. See the **LICENSE** file for full terms.
+
+> Copyright (c) 2025 **Murilo Porfírio de Aguiar**
+>
+> Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to use, copy, and modify the Software for personal, educational, or research purposes only, subject to the following conditions:
+>
+> 1. **Non‑Commercial Use Only**: The Software may not be used, in whole or in part, for any commercial purpose. Commercial use includes, but is not limited to: selling copies of the Software; selling products or services that include or are derived from the Software; using the Software in paid projects, whether for direct sale or internal commercial benefit.
+> 2. **No Resale**: You may not sell, sublicense, rent, lease, or otherwise distribute the Software for financial gain.
+> 3. **Credit to Original Author**: All copies or substantial portions of the Software must retain the above copyright notice and this permission notice. The original author, **Murilo Porfírio de Aguiar**, must be clearly credited in any use, distribution, or derivative work.
+> 4. **No Warranty**: The Software is provided "as is", without warranty of any kind, express or implied.
+> 5. **Modification and Distribution**: You may modify and share the Software only if the new work also follows this same license (non‑commercial) and clear attribution to the original author is maintained.
+>
+> Any violation of these terms will result in automatic termination of this license. For commercial use or special exceptions, contact: **[murilo.porfirio@yahoo.com](mailto:murilo.porfirio@yahoo.com)**.
+
+---
+
+## Citation
+
+If this pipeline helps your work, please cite this repository and the Docker images used (Parabricks, GATK, VEP, samtools, Trim Galore).
+
+---
+
+## Maintainer
+
+**Murilo Porfírio de Aguiar** — issues and questions welcome.
