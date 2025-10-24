@@ -7,7 +7,7 @@
 ## What this pipeline does
 
 * Trim paired‑end FASTQs with optional FastQC
-* Convert **FASTQ → BAM** using Parabricks, mark duplicates, and produce a **BQSR table**
+* FASTQ alignment/mapping (**FASTQ → BAM**) using Parabricks, mark duplicates, and produce a **BQSR table**
 * Validate / fix **Read Groups (RG)** if needed
 * Apply **BQSR** (GPU)
 * Call somatic variants (Parabricks Mutect2)
