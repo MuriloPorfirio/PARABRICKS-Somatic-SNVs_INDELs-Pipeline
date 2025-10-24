@@ -11,16 +11,17 @@
 * Validate / fix **Read Groups (RG)** if needed
 * Apply **BQSR** (GPU)
 * Call somatic variants (Parabricks Mutect2)
-* Annotate variants (VEP and dbSNP on GPU)
+* Annotate variants (VEP and dbSNP using GPU)
 
 ---
 
 ## Requirements
 
-* **Linux server** (tested on modern Ubuntu/CentOS/RHEL)
-* **NVIDIA GPU** (CUDA‑capable) and **NVIDIA driver** installed on host
-* **Docker** installed
-* **NVIDIA Container Toolkit** (so containers can see the GPU)
+* **Linux server** (tested on modern Ubuntu 22.04.5 LTS (Jammy Jellyfish))
+* **NVIDIA A100-SXM4-80GB** (CUDA Version: 12.2) and **NVIDIA Driver Version: 535.216.03** installed on host
+* **Docker version 27.1.2, build d01f264** installed
+* **Toolkit NVIDIA Container Toolkit CLI version 1.17.4
+commit: 9b69590c7428470a72f2ae05f826412976af1395** (so containers can see the GPU)
 * Enough **RAM** and **disk** for your datasets
 
 Quick checks:
@@ -28,6 +29,7 @@ Quick checks:
 ```bash
 nvidia-smi            # GPU visible?
 docker --version      # Docker installed?
+nvidia-ctk --version
 ```
 
 ---
